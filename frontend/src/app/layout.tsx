@@ -2,7 +2,7 @@
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "./styles/react-datepicker.css";
 import Navbar from './components/Navbar'; // adjust the path if necessary
 
 const geistSans = Geist({

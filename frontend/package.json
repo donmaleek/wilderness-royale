@@ -21,13 +21,18 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@ljharb/tsconfig": "^0.3.2",
     "@tailwindcss/postcss": "^4",
+    "@tsconfig/next": "^2.0.3",
     "@types/node": "^20",
     "@types/react": "^19",
+    "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
-    "tailwindcss": "^4",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.6",
     "typescript": "^5"
   }
 }

@@ -24,7 +24,7 @@
     ],
     "paths": {
       "@/*": [
-        "./src/*"
+        "../frontend/src/*"
       ]
     }
   },
@@ -35,6 +35,7 @@
     "next-env.d.ts",
     ".next/types/**/*.ts"
   ],
+  "extends": "./node_modules/@ljharb/tsconfig/tsconfig.json",
   "exclude": [
     "frontend/node_modules"
   ]
