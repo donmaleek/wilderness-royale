@@ -1,4 +1,3 @@
-# render.yaml
 services:
   - type: web
     name: wilderness-frontend-dev
@@ -7,8 +6,28 @@ services:
     env: docker
     plan: free
     dockerfilePath: ./frontend/Dockerfile
+    rootDirectory: ./frontend  # Explicit root directory
     port: 3000
-    autoDeploy: true  # Automatic updates on git push
+    autoDeploy: true
+    healthCheckPath: /  # Added health check endpoint
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        value: http://localhost:4000  # Will change later
+        value: http://localhost:4000
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_TELEMETRY_DISABLED
+        value: 1  # Disables Next.js telemetry
+
+    # Advanced configuration (optional)
+    buildCommand: docker build -t wilderness-frontend .
+    numInstances: 1
+    disk:
+      name: wilderness-data
+      mountPath: /data
+      sizeGB: 1
+
+    # Future scaling (uncomment when needed)
+    # scaling:
+    #   minInstances: 1
+    #   maxInstances: 2
+    #   cpuUtilization: 80
