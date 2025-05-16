@@ -1,0 +1,14 @@
+# render.yaml
+services:
+  - type: web
+    name: wilderness-frontend-dev
+    runtime: docker
+    branch: main
+    env: docker
+    plan: free
+    dockerfilePath: ./frontend/Dockerfile
+    port: 3000
+    autoDeploy: true  # Automatic updates on git push
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: http://localhost:4000  # Will change later
