@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Cache dependencies layer
 COPY package*.json ./
-COPY .npmrc ./
+#COPY .npmrc ./
 RUN npm install --frozen-lockfile
 
 # Build application
