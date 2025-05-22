@@ -17,7 +17,7 @@ FROM nginx:alpine
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy Next.js build output (verify your build directory)
-COPY --from=builder /app/.next/standalone /usr/share/nginx/html
+COPY --from=builder /app/out /usr/share/nginx/html
 COPY --from=builder /app/.next/static /usr/share/nginx/html/_next/static
 
 # Security hardening
