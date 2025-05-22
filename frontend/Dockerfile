@@ -14,8 +14,8 @@ RUN npm run build
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 
-# Copy optimized nginx config
-COPY nginx.conf /etc/nginx/nginx.conf
+# Correct COPY for nginx.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # Copy Next.js build output
 COPY --from=builder /app/build /usr/share/nginx/html
