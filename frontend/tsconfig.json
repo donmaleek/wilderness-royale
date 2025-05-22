@@ -31,9 +31,10 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    ".next/types/**/*.ts",
     "frontend/.next/types/**/*.ts",
     "next-env.d.ts",
-    ".next/types/**/*.ts"
+    "build/types/**/*.ts"
   ],
   "extends": "./node_modules/@ljharb/tsconfig/tsconfig.json",
   "exclude": [
