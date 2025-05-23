@@ -7,13 +7,13 @@ RUN apk add --no-cache python3 make g++
 COPY package*.json ./
 RUN npm ci
 
-# Copy source files and build
+# Copy source files
 COPY . .
-RUN npm run build
 
-# Adjust paths for static export
-RUN find ./out -type f -name '*.html' -exec sed -i 's|/_next/|./_next/|g' {} \; && \
-    find ./out -type f -name '*.js' -exec sed -i 's|/_next/|./_next/|g' {} \;
+# Build and fix asset paths
+RUN npm run build && \
+    cd out && \
+    find . -type f \( -name '*.html' -o -name '*.js' \) -exec sed -i 's|/_next/|./_next/|g' {} \;
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
@@ -21,7 +21,7 @@ FROM nginx:alpine
 # Install gettext for envsubst
 RUN apk add --no-cache gettext
 
-# Copy built files from builder stage
+# Copy built files
 COPY --from=builder /app/out /usr/share/nginx/html
 
 # Copy Nginx config template
@@ -32,7 +32,7 @@ RUN chown -R nginx:nginx /usr/share/nginx/html && \
     chmod -R 755 /usr/share/nginx/html && \
     rm -rf /etc/nginx/conf.d/default.conf
 
-# Custom entrypoint to handle port substitution
+# Custom entrypoint
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
