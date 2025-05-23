@@ -3,14 +3,15 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 # Install build tools and dependencies
-RUN apk add --no-cache python3 make g++ && \
-    npm install -g npm@latest
+RUN apk add --no-cache python3 make g++
+RUN npm install -g npm@latest
 
 # Copy package files first for better caching
-COPY package.json package-lock.json* ./
+COPY package.json package-lock.json ./
 
-# Install dependencies
-RUN npm ci --legacy-peer-deps
+# Install dependencies including polyfills
+RUN npm ci --legacy-peer-deps && \
+    npm install path-browserify stream-browserify crypto-browserify
 
 # Copy all source files
 COPY . .
