@@ -4,7 +4,8 @@ WORKDIR /app
 
 # Cache dependencies
 COPY package*.json ./
-RUN npm ci --only=production  # More strict than --frozen-lockfile
+RUN apk add --no-cache python3 make g++ 
+RUN npm ci
 
 # Copy source files and build
 COPY . .
