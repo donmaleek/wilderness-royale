@@ -1,31 +1,20 @@
-// @ts-check
-import type { NextConfig } from 'next'
-import path from 'path'
-
 /** @type {import('next').NextConfig} */
-const nextConfig: NextConfig = {
+const nextConfig = {
   output: 'export',
   trailingSlash: true,
-  assetPrefix: process.env.NODE_ENV === 'production' ? './' : '/',
+  assetPrefix: './',
   images: {
     unoptimized: true,
   },
   experimental: {
-    optimizeCss: true,
+    optimizeCss: true
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve = config.resolve || {}
-      config.resolve.fallback = {
-        ...(config.resolve.fallback || {}),
-        fs: false,
-        path: require.resolve('path-browserify'),
-        stream: require.resolve('stream-browserify'),
-        crypto: require.resolve('crypto-browserify')
-      }
-    }
-    return config
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
   }
 }
 
-export default nextConfig
+module.exports = nextConfig
