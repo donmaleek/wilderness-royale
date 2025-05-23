@@ -14,16 +14,23 @@ RUN npm run build
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 
+# Install gettext for envsubst
+RUN apk add --no-cache gettext
+
 # Copy built files
 COPY --from=builder /app/out /usr/share/nginx/html
 
-# Replace the ENTIRE nginx.conf (not as a template)
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copy Nginx config template
+COPY nginx.conf.template /etc/nginx/templates/
 
-# Security hardening (keep your existing commands)
+# Security hardening
 RUN chown -R nginx:nginx /usr/share/nginx/html && \
     chmod -R 755 /usr/share/nginx/html && \
     rm -rf /etc/nginx/conf.d/default.conf
 
+# Custom entrypoint to handle port substitution
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
