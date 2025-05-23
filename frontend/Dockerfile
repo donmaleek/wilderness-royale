@@ -4,13 +4,13 @@ WORKDIR /app
 
 # Install build tools and dependencies
 RUN apk add --no-cache python3 make g++
-RUN npm install -g npm@latest
 
+# Use compatible npm version (remove the npm upgrade line)
 # Copy package files first for better caching
 COPY package.json package-lock.json ./
 
 # Install dependencies including polyfills
-RUN npm ci --legacy-peer-deps && \
+RUN npm install --legacy-peer-deps && \
     npm install path-browserify stream-browserify crypto-browserify
 
 # Copy all source files
