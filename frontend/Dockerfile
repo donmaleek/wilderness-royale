@@ -10,9 +10,11 @@ RUN npm ci
 # Copy source files
 COPY . .
 
-# Build and fix asset paths
-RUN npm run build && \
-    cd out && \
+# Build the application
+RUN npm run build
+
+# Fix asset paths (run separately to isolate build errors)
+RUN cd out && \
     find . -type f \( -name '*.html' -o -name '*.js' \) -exec sed -i 's|/_next/|./_next/|g' {} \;
 
 # Stage 2: Serve with Nginx
