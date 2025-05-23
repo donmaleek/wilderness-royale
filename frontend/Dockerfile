@@ -3,17 +3,22 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 # Install build tools and dependencies
-RUN apk add --no-cache python3 make g++
-COPY package*.json ./
-RUN npm ci
+RUN apk add --no-cache python3 make g++ && \
+    npm install -g npm@latest
 
-# Copy source files
+# Copy package files first for better caching
+COPY package.json package-lock.json* ./
+
+# Install dependencies
+RUN npm ci --legacy-peer-deps
+
+# Copy all source files
 COPY . .
 
-# Build the application
-RUN npm run build
+# Build with verbose output
+RUN npm run build --verbose
 
-# Fix asset paths (run separately to isolate build errors)
+# Fix asset paths for static export
 RUN cd out && \
     find . -type f \( -name '*.html' -o -name '*.js' \) -exec sed -i 's|/_next/|./_next/|g' {} \;
 
@@ -23,7 +28,7 @@ FROM nginx:alpine
 # Install gettext for envsubst
 RUN apk add --no-cache gettext
 
-# Copy built files
+# Copy built files from builder stage
 COPY --from=builder /app/out /usr/share/nginx/html
 
 # Copy Nginx config template
