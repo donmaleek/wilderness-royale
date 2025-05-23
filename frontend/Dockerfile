@@ -14,21 +14,16 @@ RUN npm run build
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 
-# Install envsubst for template substitution
-RUN apk add --no-cache gettext
-
-# Copy and process Nginx configuration
-COPY nginx.conf.template /etc/nginx/templates/nginx.conf.template
+# Copy built files
 COPY --from=builder /app/out /usr/share/nginx/html
 
-# Security hardening
+# Replace the ENTIRE nginx.conf (not as a template)
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Security hardening (keep your existing commands)
 RUN chown -R nginx:nginx /usr/share/nginx/html && \
     chmod -R 755 /usr/share/nginx/html && \
     rm -rf /etc/nginx/conf.d/default.conf
-
-# Health check (pointing to correct location)
-HEALTHCHECK --interval=30s --timeout=3s \
-    CMD curl -f http://localhost:$PORT/ || exit 1
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
