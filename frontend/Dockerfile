@@ -2,23 +2,22 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Cache dependencies layer
+# Cache dependencies
 COPY package*.json ./
 RUN npm install --frozen-lockfile
 
-# Build application
+# Copy source files and build
 COPY . .
 RUN npm run build
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 
-# Copy nginx config (relative path)
+# Copy Nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy Next.js build output (verify your build directory)
+# Copy built static output from builder stage
 COPY --from=builder /app/out /usr/share/nginx/html
-COPY --from=builder /app/.next/static /usr/share/nginx/html/_next/static
 
 # Security hardening
 RUN chown -R nginx:nginx /usr/share/nginx/html && \
