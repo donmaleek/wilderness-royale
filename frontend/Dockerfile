@@ -9,7 +9,10 @@ RUN npm ci
 
 # Copy source files and build
 COPY . .
-RUN npm run build
+RUN npm run build && \
+    # Fix asset paths for static export
+    find /app/out -type f -name '*.html' -exec sed -i 's|/_next/|./_next/|g' {} \; && \
+    find /app/out -type f -name '*.js' -exec sed -i 's|/_next/|./_next/|g' {} \;
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
@@ -17,7 +20,7 @@ FROM nginx:alpine
 # Install gettext for envsubst
 RUN apk add --no-cache gettext
 
-# Copy built files
+# Copy built files from builder stage
 COPY --from=builder /app/out /usr/share/nginx/html
 
 # Copy Nginx config template

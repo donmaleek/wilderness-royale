@@ -1,9 +1,11 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'export', // Generate a fully static site
-  images: {
-    unoptimized: true, // Required for static export
+module.exports = {
+  output: 'export',
+  // Add this experimental config:
+  experimental: {
+    appDir: true,
+    // If using Tailwind:
+    optimizeCss: true, 
   },
-};
-
-export default nextConfig;
+  // Ensure static assets are properly referenced:
+  assetPrefix: './',
+}
