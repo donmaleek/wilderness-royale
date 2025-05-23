@@ -4,7 +4,6 @@ WORKDIR /app
 
 # Cache dependencies
 COPY package*.json ./
-COPY .npmrc .  
 RUN npm ci --only=production  # More strict than --frozen-lockfile
 
 # Copy source files and build
