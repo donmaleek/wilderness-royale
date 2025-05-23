@@ -5,19 +5,17 @@ WORKDIR /app
 # Install build tools and dependencies
 RUN apk add --no-cache python3 make g++
 
-# Use compatible npm version (remove the npm upgrade line)
 # Copy package files first for better caching
 COPY package.json package-lock.json ./
 
-# Install dependencies including polyfills
-RUN npm install --legacy-peer-deps && \
-    npm install path-browserify stream-browserify crypto-browserify
+# Install dependencies (use --legacy-peer-deps if needed)
+RUN npm install --legacy-peer-deps
 
 # Copy all source files
 COPY . .
 
-# Build with verbose output
-RUN npm run build --verbose
+# Build the application (remove --verbose for cleaner output)
+RUN npm run build || (echo "Build failed - checking logs..." && cat .next/logs/* && exit 1)
 
 # Fix asset paths for static export
 RUN cd out && \
